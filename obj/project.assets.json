@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/perkinspetter/ROTradeProject/ROTradeProject.csproj",
+      "projectUniqueName": "/home/perkinspetter/ROTradeProject1/ROTradeProject.csproj",
       "projectName": "ROTradeProject",
-      "projectPath": "/home/perkinspetter/ROTradeProject/ROTradeProject.csproj",
+      "projectPath": "/home/perkinspetter/ROTradeProject1/ROTradeProject.csproj",
       "packagesPath": "/home/perkinspetter/.nuget/packages/",
-      "outputPath": "/home/perkinspetter/ROTradeProject/obj/",
+      "outputPath": "/home/perkinspetter/ROTradeProject1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/perkinspetter/.nuget/NuGet/NuGet.Config"

@@ -12,16 +12,18 @@ namespace ROTradeProject
         static Account CurrentAccount { get; set; }
         static Character CurrentChar { get; set; }
         static string Gender { get; set; }
-        static Server A = new Server();
+        static Server PRO = new Server();
 
         static void Main(string[] args)
         {
-            A.Name = "Perkins RO";
+            PRO.Name = "Perkins RO";
             Console.Clear();
-            Console.WriteLine($"\nWelcome to {A.Name}!");
+            Console.WriteLine($"\nWelcome to {PRO.Name}!");
             bool ShouldExit = false;
             while (!ShouldExit)
             {
+                Console.Clear();
+                Console.WriteLine($"[{PRO.Name}]");
                 Console.WriteLine("\nPlease select your option:");
                 switch (ShowMenu("[Register an Account]", "[Account Login]", "[Exit]"))
                 {
@@ -61,37 +63,59 @@ namespace ROTradeProject
             Console.WriteLine("[Account Registration]");
             Console.Write("\nPlease enter new Username: ");
             TempUsername = Console.ReadLine().Trim();
-            if (TempUsername.Length <= 3)
+            Console.Clear();
+            if (TempUsername.Length >= 4)
             {
-                Console.WriteLine("\nInvalid Username");
-            }
-            else if (A.IsUserExisted(TempUsername) == true)
-            {
-                Console.Clear();
-                Console.WriteLine("\nUsername is already Taken.");
+                if (!PRO.AccountIsExist(TempUsername))
+                {
+                    Console.WriteLine("[Account Registration]");
+                    Console.Write("\nenter new Password: ");
+                    TempPassword = Console.ReadLine();
+                    Console.Clear();
+                    Console.WriteLine("[Account Registration]");
+                    Console.Write("\nEnter [M] for Male, or [F] for Female: ");
+                    char key;
+                    char.TryParse(Console.ReadLine().ToUpper(), out key);
+                    Gender = GenderSelect(key);
+                    if (Gender != null)
+                    {
+                        PRO.Registration(TempUsername, TempUsername, Gender);
+                        Console.WriteLine("New account registered! You may now login.");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid gender input. Please try again.");
+                        Console.ReadKey();
+                    }
+
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("\nAccount already existed.");
+                    Console.ReadLine();
+                }
             }
             else
             {
-                Console.Write("\nenter new Password: ");
-                TempPassword = Console.ReadLine();
-                Console.Write("\nEnter [M] for Male, or [F] for Female: ");
-                char key;
-                char.TryParse(Console.ReadLine().ToUpper(), out key);
-                while (key == '\0')
-                    switch (key)
-                    {
-                        case 'M':
-                            Gender = "Male";
-                            continue;
-                        case 'F':
-                            Gender = "Female";
-                            continue;
-                        default:
-                            Console.WriteLine("Incorrect input, please try again.");
-                            break;
-                    }
-                A.Registration(TempUsername, TempUsername, Gender);
                 Console.Clear();
+                Console.WriteLine("\nInvalid username.");
+                Console.ReadLine();
+            }
+        }
+
+        static string GenderSelect(char G)
+        {
+            switch (G)
+            {
+                case 'M':
+                    return "Male";
+                case 'F':
+                    return "Female";
+                default:
+                    return null;
             }
         }
 
@@ -103,20 +127,16 @@ namespace ROTradeProject
             TempUsername = Console.ReadLine();
             Console.Write("Password: ");
             TempPassword = Console.ReadLine();
-            CurrentAccount = A.Login(TempUsername, TempPassword);
-            if (CurrentAccount == null)
-            {
-                Console.WriteLine("Username and Password does not match.");
-            }
-            else if (CurrentAccount != null)
+            CurrentAccount = PRO.Login(TempUsername, TempPassword);
+            if (CurrentAccount != null)
             {
                 bool shouldLogout = false;
                 while (!shouldLogout)
                 {
                     Console.Clear();
-                    Console.WriteLine($"Hello {CurrentAccount.Username}, Welcome to {A.Name}");
-                    Console.WriteLine("\n[Character Options]\n");
-                    switch (ShowMenu("[Create Character]", "[Select Character]", "[Delete Character]", "[Logout]"))
+                    Console.WriteLine($"\n[{CurrentAccount.Username} > Character Board]\n");
+                    ShowCharacters();
+                    switch (ShowMenu("[Create Character]", "[Select Character]", "[Logout]"))
                     {
                         case '1':
                             ShowCreateChar();
@@ -125,9 +145,6 @@ namespace ROTradeProject
                             ShowSelectChar();
                             continue;
                         case '3':
-                            ShowDeleteChar();
-                            continue;
-                        case '4':
                             shouldLogout = true;
                             Console.Clear();
                             continue;
@@ -137,51 +154,73 @@ namespace ROTradeProject
                     }
                 }
             }
+            else if (CurrentAccount == null)
+            {
+                Console.Clear();
+                Console.WriteLine("Login failed, please try again.");
+                Console.ReadKey();
+            }
         }
 
         static void ShowCreateChar()
         {
             Console.Clear();
-            Console.WriteLine("[Create Character]");
+            Console.WriteLine($"\n[{CurrentAccount.Username} > Create Character]\n");
             Console.Write("\nName: ");
             TempCharName = Console.ReadLine().Trim();
-            if (TempCharName.Length <= 3 || TempCharName.Length > 8)
+            if (TempCharName.Length >= 4 && TempCharName.Length <= 20)
             {
-                Console.WriteLine("Name must be 4 to 8 characters.");
-            }
-            else if (A.IsCharNameTaken(TempCharName))
-            {
-                Console.WriteLine("Name is already taken.");
+                if (!PRO.IsCharacterExist(TempCharName))
+                {
+                    if (CurrentAccount.Characters.Count < 9)
+                    {
+                        Item Freebie1 = Freebies(2305);
+                        Item Freebie2 = Freebies(1207);
+                        CurrentAccount.CreateChar(TempCharName, Freebie1, Freebie2);
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Maximum number of characters reached.");
+                        Console.ReadKey();
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Name is already taken.");
+                    Console.ReadKey();
+                }
             }
             else
             {
-                A.NamesCopy(TempCharName);
-                CurrentAccount.CreateChar(TempCharName);
+                Console.Clear();
+                Console.WriteLine("Name must be 4 to 20 characters.");
+                Console.ReadKey();
             }
         }
 
         static void ShowSelectChar()
         {
             Console.Clear();
-            CurrentAccount.ShowCharacterList();
-            Console.WriteLine("\n[Select Character]");
+            Console.WriteLine($"\n[{CurrentAccount.Username} > Character Select]\n");
             Console.Write("\nEnter Character's Name: ");
             TempCharName = Console.ReadLine();
-            CurrentChar = CurrentAccount.SelectCharacter(TempCharName);
-            Console.Clear();
-            if (CurrentChar == null)
-            {
-                Console.WriteLine("Character does not exist.");
-            }
-            else if (CurrentChar != null)
+            CurrentChar = CurrentAccount.Characterselect(TempCharName);
+            if (CurrentChar != null)
             {
                 bool toChangeChar = false;
                 Console.Clear();
                 while (!toChangeChar)
                 {
                     Console.Clear();
-                    Console.WriteLine($"[Character : {CurrentChar.Name}]\n");
-                    switch (ShowMenu("[Stats]", "[Inventory]", "[Change Character]"))
+                    Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Character Options]");
+                    Console.WriteLine("---------------------------------------------");
+                    Console.WriteLine($"Character : {CurrentChar.Name}\tLvl : {CurrentChar.Level}\tJob : {CurrentChar.Job}");
+                    Console.WriteLine($"Statpoint : {CurrentChar.StatPoints}\nStr : {CurrentChar.Str}\nAgi : {CurrentChar.Agi}\nVit : {CurrentChar.Vit}\nInt : {CurrentChar.Int}\nDex : {CurrentChar.Dex}\nLuk : {CurrentChar.Luk}");
+                    Console.WriteLine("---------------------------------------------");
+                    switch (ShowMenu("[Stats]", "[Inventory]", "[Delete Character]", "[Change Character]"))
                     {
                         case '1':
                             ShowStats();
@@ -190,6 +229,10 @@ namespace ROTradeProject
                             ShowInventory();
                             continue;
                         case '3':
+                            CurrentAccount.DeleteChar(CurrentChar);
+                            toChangeChar = true;
+                            continue;
+                        case '4':
                             toChangeChar = true;
                             continue;
                         default:
@@ -198,71 +241,47 @@ namespace ROTradeProject
                     }
                 }
             }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Character does not exist.");
+                Console.ReadKey();
+            }
         }
-        static void ShowCharStats()
-        {
-            Console.Clear();
-            Console.WriteLine($"[{CurrentChar.Name}]\tlvl.{CurrentChar.Level}\tJob:{CurrentChar.Job}");
-            Console.WriteLine($"Statpoints : {CurrentChar.StatPoints}\nStr > {CurrentChar.Str}\nInt > {CurrentChar.Int}\nDex > {CurrentChar.Dex}\nAgi > {CurrentChar.Agi}\nVit > {CurrentChar.Vit}\nLuk > {CurrentChar.Luk}\n");
-        }
+
         static void ShowStats()
         {
             bool IsAssignout = false;
             while (!IsAssignout)
             {
-                ShowCharStats();
-                switch (ShowMenu($"[Str+1]", "[Int+1]", "[Dex+1]", "[Agi+1]", "[Vit+1]", "[Luk+1]", "[Reset]", "[Back]"))
+                Console.Clear();
+                Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Stats]\n");
+                Console.WriteLine("---------------------------------------------");
+                Console.WriteLine($"Character : {CurrentChar.Name}\tLvl : {CurrentChar.Level}\tJob : {CurrentChar.Job}");
+                Console.WriteLine($"Statpoint : {CurrentChar.StatPoints}\nStr : {CurrentChar.Str}\nAgi : {CurrentChar.Agi}\nVit : {CurrentChar.Vit}\nInt : {CurrentChar.Int}\nDex : {CurrentChar.Dex}\nLuk : {CurrentChar.Luk}");
+                Console.WriteLine("---------------------------------------------");
+                switch (ShowMenu($"[Str+1]", "[Agi+1]", "[Vit+1]", "[Int+1]", "[Dex+1]", "[Luk+1]", "[Reset]", "[Back]"))
                 {
                     case '1':
-                        if (CurrentChar.StatPoints >= 1)
-                        {
-                            CurrentChar.Str += 1;
-                            CurrentChar.StatPoints -= 1;
-                        }
+                        CurrentChar.StrStat();
                         continue;
                     case '2':
-                        if (CurrentChar.StatPoints >= 1)
-                        {
-                            CurrentChar.Int += 1;
-                            CurrentChar.StatPoints -= 1;
-                        }
+                        CurrentChar.AgiStat();
                         continue;
                     case '3':
-                        if (CurrentChar.StatPoints >= 1)
-                        {
-                            CurrentChar.Dex += 1;
-                            CurrentChar.StatPoints -= 1;
-                        }
+                        CurrentChar.VitStat();
                         continue;
                     case '4':
-                        if (CurrentChar.StatPoints >= 1)
-                        {
-                            CurrentChar.Agi += 1;
-                            CurrentChar.StatPoints -= 1;
-                        }
+                        CurrentChar.IntStat();
                         continue;
                     case '5':
-                        if (CurrentChar.StatPoints >= 1)
-                        {
-                            CurrentChar.Vit += 1;
-                            CurrentChar.StatPoints -= 1;
-                        }
+                        CurrentChar.DexStat();
                         continue;
                     case '6':
-                        if (CurrentChar.StatPoints >= 1)
-                        {
-                            CurrentChar.Luk += 1;
-                            CurrentChar.StatPoints -= 1;
-                        }
+                        CurrentChar.LukStat();
                         continue;
                     case '7':
-                        CurrentChar.Str = 0;
-                        CurrentChar.Int = 0;
-                        CurrentChar.Dex = 0;
-                        CurrentChar.Agi = 0;
-                        CurrentChar.Vit = 0;
-                        CurrentChar.Luk = 0;
-                        CurrentChar.StatPoints = 44;
+                        CurrentChar.StatReset();
                         continue;
                     case '8':
                         IsAssignout = true;
@@ -277,33 +296,117 @@ namespace ROTradeProject
             while (!IsBagClose)
             {
                 Console.Clear();
-                Console.WriteLine($"[Inventory : {CurrentChar.Name}]\n");
-                CurrentChar.DisplayInventory();
-                switch (ShowMenu("[Mail Item]", "[Back]"))
+                Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory]\n");
+                ShowEquipBag();
+                switch (ShowMenu("[Storage]", "[Mail Item]", "[Back]"))
                 {
                     case '1':
                         Console.Clear();
-                        Console.WriteLine("[Mail Items]");
-                        Console.Write("Item ID: ");
-                        int TempItemId;
-                        int.TryParse(Console.ReadLine(), out TempItemId);
-                        Console.Write("\nMail to account: ");
-                        TempUsername = Console.ReadLine();
-                        Console.Write("\nMail to character: ");
-                        TempCharName = Console.ReadLine();
-                        if (A.IsCharNameTaken(TempCharName))
+                        ShowEquipStorage();
+                        ShowEquipBag();
+                        bool IsStorageClose = false;
+                        while (!IsStorageClose)
                         {
-                            CurrentChar.SendItem(TempItemId); //Item Delete from Source
-                            ReceiverAccount = A.SendToAccnt(TempUsername);
-                            ReceiverCharacter = ReceiverAccount.CharacterReceiver(TempCharName);
-                            ReceiverCharacter.ReceiveItem(TempItemId);
-                        }
-                        else if (!A.IsCharNameTaken(TempCharName))
-                        {
-                            Console.WriteLine("\nCharacter does not exist!.");
+                            switch (ShowMenu("[Deposit]", "[Withdraw]", "[Back]"))
+                            {
+                                case '1':
+                                    Console.Clear();
+                                    Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage > Deposit]\n");
+                                    Console.Write("Enter item id: ");
+                                    int DepItemId;
+                                    int.TryParse(Console.ReadLine(), out DepItemId);
+                                    if (PRO.ItemDatabase.ContainsKey(DepItemId))
+                                    {
+                                        Item Transferable;
+                                        PRO.ItemDatabase.TryGetValue(DepItemId, out Transferable);
+                                        if (CurrentChar.Inventory.Contains(Transferable))
+                                        {
+                                            CurrentAccount.StorageDeposit(Transferable);
+                                            CurrentChar.InventoryItemOut(Transferable);
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("You don't have that item.");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid item id.");
+                                    }
+                                    continue;
+                                case '2':
+                                    Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage > Deposit]\n");
+                                    Console.Write("Enter item id: ");
+                                    int WthItemId;
+                                    int.TryParse(Console.ReadLine(), out WthItemId);
+                                    if (PRO.ItemDatabase.ContainsKey(WthItemId))
+                                    {
+                                        Item Transferable;
+                                        PRO.ItemDatabase.TryGetValue(WthItemId, out Transferable);
+                                        if (CurrentChar.Inventory.Contains(Transferable))
+                                        {
+                                            CurrentAccount.StorageWithdraw(Transferable);
+                                            CurrentChar.InventoryItemIn(Transferable);
+                                            Console.Clear();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("You don't have that item.");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid item id.");
+                                    }
+                                    continue;
+                                case '3':
+                                    IsStorageClose = true;
+                                    continue;
+                            }
                         }
                         continue;
+
                     case '2':
+                        Console.Clear();
+                        Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Mail Item]\n");
+                        ShowEquipBag();
+                        Console.Write("\nMail to character(Name): ");
+                        TempCharName = Console.ReadLine();
+                        if (PRO.IsCharacterExist(TempCharName))
+                        {
+                            Character Receiver = PRO.MailReceiver(TempCharName);
+                            Console.Clear();
+                            Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Mail Item]\n");
+                            ShowEquipBag();
+                            Console.Write("Enter item id: ");
+                            int Itemid;
+                            int.TryParse(Console.ReadLine(), out Itemid);
+                            if (PRO.ItemDatabase.ContainsKey(Itemid))
+                            {
+                                Item Transferable;
+                                PRO.ItemDatabase.TryGetValue(Itemid, out Transferable);
+                                if (CurrentChar.Inventory.Contains(Transferable))
+                                {
+                                    CurrentChar.InventoryItemOut(Transferable);
+                                    Receiver.InventoryItemIn(Transferable);
+                                    Console.Clear();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("You don't have that item.");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid item id.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Character does not exist.");
+                        }
+                        continue;
+                    case '3':
                         IsBagClose = true;
                         continue;
                     default:
@@ -313,14 +416,64 @@ namespace ROTradeProject
             }
         }
 
-        static void ShowDeleteChar()
+        static void ShowCharacters()
         {
-            Console.Clear();
-            Console.WriteLine("\n[Delete Character]");
-            Console.Write("Choose a character to delete: ");
-            TempCharName = Console.ReadLine();
-            CurrentAccount.DeleteChar(TempCharName);
-            A.DeleteCharacter(TempCharName);
+            foreach (Character character in CurrentAccount.Characters)
+            {
+                Console.WriteLine($"Character : {character.Name}\t\tLvl : {character.Level}\tJob : {character.Job}");
+                Console.WriteLine($"Str : {character.Str}\t\tInt : {character.Int}\nAgi : {character.Agi}\t\tDex : {character.Dex}\nVit : {character.Vit}\t\tLuk : {character.Luk}\t\tStatpoint : {character.StatPoints}");
+                Console.WriteLine("---------------------------------------------------");
+            }
+        }
+
+        static void ShowEquipBag()
+        {
+            if (CurrentChar.Inventory.Count > 0)
+            {
+                Console.WriteLine("[Bag Items]");
+                Console.WriteLine("Item ID:\tItem:");
+                foreach (Item item in CurrentChar.Inventory)
+                {
+                    Console.WriteLine($"{item.ID}\t\t{item.Name}[{item.Slot}]");
+                }
+                Console.WriteLine("---------------------------------------------");
+            }
+            else
+            {
+                Console.WriteLine("[Bag Items]");
+                Console.WriteLine("\n\t[Empty]\n\n");
+                Console.WriteLine("---------------------------------------------");
+            }
+        }
+
+        static void ShowEquipStorage()
+        {
+            if (CurrentAccount.Storage.Count > 0)
+            {
+                Console.WriteLine("[Storage Items]");
+                Console.WriteLine("Item ID:\tItem:");
+                foreach (Item item in CurrentAccount.Storage)
+                {
+                    Console.WriteLine($"{item.ID}\t\t{item.Name}[{item.Slot}]");
+                }
+                Console.WriteLine("---------------------------------------------");
+            }
+            else
+            {
+                Console.WriteLine("[Storage Items]");
+                Console.WriteLine("\n\t[Empty]\n\n");
+                Console.WriteLine("---------------------------------------------");
+            }
+        }
+        static Item Freebies(int f)
+        {
+            if (PRO.ItemDatabase.ContainsKey(f))
+            {
+                Item Freebies;
+                PRO.ItemDatabase.TryGetValue(f, out Freebies);
+                return Freebies;
+            }
+            return null;
         }
     }
 }

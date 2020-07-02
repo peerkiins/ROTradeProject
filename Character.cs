@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ROTradeProject
 {
@@ -14,98 +15,86 @@ namespace ROTradeProject
         public int Agi { get; set; }
         public int Vit { get; set; }
         public int Luk { get; set; }
-        public Item[] Items { get; set; }
-        private int _bagslot { get; set; }
+        public List<Item> Inventory = new List<Item>();
 
-        public Character()
-        {
-            Items = new Item[30];
-            _bagslot = 0;
-            Items[_bagslot++] = new Item
-            {
-                ID = 0,
-                Name = "Adventurer Suit[4]",
-                Type = "Body"
-            };
-            Items[_bagslot++] = new Item
-            {
-                ID = 1,
-                Name = "Knife[4]",
-                Type = "Weapon"
-            };
-        }
+        // public Character()
+        // {
+        //     Inventory.Add(new Item { ID = 2305, Name = "Adventurer's Suit", Slot = 0, Type = "Body" });
+        //     Inventory.Add(new Item { ID = 1207, Name = "Main Gauche", Slot = 3, Type = "One Hand" });
+        // }
 
-        public void ReceiveItem(int ItemId)
+        public void StrStat()
         {
-            Items[_bagslot++] = ItemReceived(ItemId);
-        }
-
-        public void SendItem(int ItemId)
-        {
-            var idx = ItemIdx(ItemId);
-            if (idx != -1)
+            if (StatPoints >= 1)
             {
-                var firstHalf = new Item[idx];
-                CopyTo(Items, firstHalf, 0, idx);
-                var secondHalf = new Item[Items.Length - firstHalf.Length - 1];
-                CopyTo(Items, secondHalf, idx + 1, idx + secondHalf.Length);
-                var nItems = new Item[firstHalf.Length + secondHalf.Length];
-                CopyTo(firstHalf, nItems, 0, firstHalf.Length);
-                CopyTo(secondHalf, nItems, idx, firstHalf.Length + secondHalf.Length);
-                Items = nItems;
+                Str += 1;
+                StatPoints -= 1;
             }
         }
 
-        public int ItemIdx(int ItemId)
+        public void AgiStat()
         {
-            foreach (Item item in Items)
+            if (StatPoints >= 1)
             {
-                for (var i = 0; i < _bagslot; i++)
-                {
-                    if (item != null && item.ID == ItemId)
-                    {
-                        return i;
-                    }
-                }
-            }
-            return -1;
-        }
-        public Item ItemReceived(int ItemId)
-        {
-            foreach (Item item in Items)
-            {
-                for (var i = 0; i < _bagslot; i++)
-                {
-                    if (item != null && item.ID == ItemId)
-                    {
-                        return item;
-                    }
-                }
-            }
-            return null;
-        }
-
-        public void CopyTo(Item[] Itemsfrom, Item[] ItemsTemp, int Startidx, int Endidx)
-        {
-            for (int x = Startidx; x < Endidx; x++)
-            {
-                ItemsTemp[x] = Itemsfrom[x];
+                Agi += 1;
+                StatPoints -= 1;
             }
         }
 
-        public void DisplayInventory()
+        public void VitStat()
         {
-            Console.WriteLine("[Bag]");
-            foreach (Item item in Items)
+            if (StatPoints >= 1)
             {
-                for (int i = 0; i < _bagslot; i++)
-                {
-                    if (item != null)
-                    {
-                        Console.WriteLine($"{item.ID}\t{item.Type}\t{item.Name}\n");
-                    }
-                }
+                Vit += 1;
+                StatPoints -= 1;
             }
+        }
+        public void IntStat()
+        {
+            if (StatPoints >= 1)
+            {
+                Int += 1;
+                StatPoints -= 1;
+            }
+        }
+
+        public void DexStat()
+        {
+            if (StatPoints >= 1)
+            {
+                Dex += 1;
+                StatPoints -= 1;
+            }
+        }
+
+        public void LukStat()
+        {
+            if (StatPoints >= 1)
+            {
+                Luk += 1;
+                StatPoints -= 1;
+            }
+        }
+
+        public void StatReset()
+        {
+            Str = 0;
+            Agi = 0;
+            Vit = 0;
+            Int = 0;
+            Dex = 0;
+            Luk = 0;
+            StatPoints = 44;
+        }
+
+        public void InventoryItemIn(Item Transferable)
+        {
+            Inventory.Add(Transferable);
+        }
+
+        public void InventoryItemOut(Item Transferable)
+        {
+            Inventory.Remove(Transferable);
         }
     }
 }

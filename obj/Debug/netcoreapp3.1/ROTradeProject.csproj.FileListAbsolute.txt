@@ -11,3 +11,16 @@
 /home/perkinspetter/ROTradeProject/obj/Debug/netcoreapp3.1/ROTradeProject.dll
 /home/perkinspetter/ROTradeProject/obj/Debug/netcoreapp3.1/ROTradeProject.pdb
 /home/perkinspetter/ROTradeProject/obj/Debug/netcoreapp3.1/ROTradeProject.genruntimeconfig.cache
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.csprojAssemblyReference.cache
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.AssemblyInfoInputs.cache
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.AssemblyInfo.cs
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.csproj.CoreCompileInputs.cache
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.dll
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.pdb
+/home/perkinspetter/ROTradeProject1/bin/Debug/netcoreapp3.1/ROTradeProject
+/home/perkinspetter/ROTradeProject1/bin/Debug/netcoreapp3.1/ROTradeProject.deps.json
+/home/perkinspetter/ROTradeProject1/bin/Debug/netcoreapp3.1/ROTradeProject.runtimeconfig.json
+/home/perkinspetter/ROTradeProject1/bin/Debug/netcoreapp3.1/ROTradeProject.runtimeconfig.dev.json
+/home/perkinspetter/ROTradeProject1/bin/Debug/netcoreapp3.1/ROTradeProject.dll
+/home/perkinspetter/ROTradeProject1/bin/Debug/netcoreapp3.1/ROTradeProject.pdb
+/home/perkinspetter/ROTradeProject1/obj/Debug/netcoreapp3.1/ROTradeProject.genruntimeconfig.cache
