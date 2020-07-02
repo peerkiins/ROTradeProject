@@ -18,7 +18,7 @@ namespace ROTradeProject
                 Name = Name,
                 Level = 10,
                 Job = "Novice",
-                StatPoints = 44,
+                UnusedStatPoints = 50,
                 Str = 0,
                 Agi = 0,
                 Vit = 0,

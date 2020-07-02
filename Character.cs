@@ -7,7 +7,7 @@ namespace ROTradeProject
     {
         public string Name { get; set; }
         public int Level { get; set; }
-        public int StatPoints { get; set; }
+        public int UnusedStatPoints { get; set; }
         public string Job { get; set; }
         public int Str { get; set; }
         public int Int { get; set; }
@@ -17,62 +17,56 @@ namespace ROTradeProject
         public int Luk { get; set; }
         public List<Item> Inventory = new List<Item>();
 
-        // public Character()
-        // {
-        //     Inventory.Add(new Item { ID = 2305, Name = "Adventurer's Suit", Slot = 0, Type = "Body" });
-        //     Inventory.Add(new Item { ID = 1207, Name = "Main Gauche", Slot = 3, Type = "One Hand" });
-        // }
-
         public void StrStat()
         {
-            if (StatPoints >= 1)
+            if (UnusedStatPoints >= 1)
             {
                 Str += 1;
-                StatPoints -= 1;
+                UnusedStatPoints -= 1;
             }
         }
 
         public void AgiStat()
         {
-            if (StatPoints >= 1)
+            if (UnusedStatPoints >= 1)
             {
                 Agi += 1;
-                StatPoints -= 1;
+                UnusedStatPoints -= 1;
             }
         }
 
         public void VitStat()
         {
-            if (StatPoints >= 1)
+            if (UnusedStatPoints >= 1)
             {
                 Vit += 1;
-                StatPoints -= 1;
+                UnusedStatPoints -= 1;
             }
         }
         public void IntStat()
         {
-            if (StatPoints >= 1)
+            if (UnusedStatPoints >= 1)
             {
                 Int += 1;
-                StatPoints -= 1;
+                UnusedStatPoints -= 1;
             }
         }
 
         public void DexStat()
         {
-            if (StatPoints >= 1)
+            if (UnusedStatPoints >= 1)
             {
                 Dex += 1;
-                StatPoints -= 1;
+                UnusedStatPoints -= 1;
             }
         }
 
         public void LukStat()
         {
-            if (StatPoints >= 1)
+            if (UnusedStatPoints >= 1)
             {
                 Luk += 1;
-                StatPoints -= 1;
+                UnusedStatPoints -= 1;
             }
         }
 
@@ -84,7 +78,7 @@ namespace ROTradeProject
             Int = 0;
             Dex = 0;
             Luk = 0;
-            StatPoints = 44;
+            UnusedStatPoints = 44;
         }
 
         public void InventoryItemIn(Item Transferable)

@@ -23,7 +23,7 @@ namespace ROTradeProject
             while (!ShouldExit)
             {
                 Console.Clear();
-                Console.WriteLine($"[{PRO.Name}]");
+                Console.WriteLine($"\n[{PRO.Name}]");
                 Console.WriteLine("\nPlease select your option:");
                 switch (ShowMenu("[Register an Account]", "[Account Login]", "[Exit]"))
                 {
@@ -60,7 +60,7 @@ namespace ROTradeProject
         static void ShowRegistration()
         {
             Console.Clear();
-            Console.WriteLine("[Account Registration]");
+            Console.WriteLine("\n[Account Registration]");
             Console.Write("\nPlease enter new Username: ");
             TempUsername = Console.ReadLine().Trim();
             Console.Clear();
@@ -205,6 +205,7 @@ namespace ROTradeProject
         {
             Console.Clear();
             Console.WriteLine($"\n[{CurrentAccount.Username} > Character Select]\n");
+            ShowCharacters();
             Console.Write("\nEnter Character's Name: ");
             TempCharName = Console.ReadLine();
             CurrentChar = CurrentAccount.Characterselect(TempCharName);
@@ -215,11 +216,10 @@ namespace ROTradeProject
                 while (!toChangeChar)
                 {
                     Console.Clear();
-                    Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Character Options]");
-                    Console.WriteLine("---------------------------------------------");
-                    Console.WriteLine($"Character : {CurrentChar.Name}\tLvl : {CurrentChar.Level}\tJob : {CurrentChar.Job}");
-                    Console.WriteLine($"Statpoint : {CurrentChar.StatPoints}\nStr : {CurrentChar.Str}\nAgi : {CurrentChar.Agi}\nVit : {CurrentChar.Vit}\nInt : {CurrentChar.Int}\nDex : {CurrentChar.Dex}\nLuk : {CurrentChar.Luk}");
-                    Console.WriteLine("---------------------------------------------");
+                    Console.WriteLine($"\n[{CurrentAccount.Username} > {CurrentChar.Name} > Character Options]\n");
+                    Console.WriteLine("--------------------------------------------------------");
+                    Console.WriteLine($"Name:\t{CurrentChar.Name}\t\tStr : {CurrentChar.Str}\t\tInt : {CurrentChar.Int}\nLvl:\t{CurrentChar.Level}\t\tAgi : {CurrentChar.Agi}\t\tDex : {CurrentChar.Dex}\nJob:\t{CurrentChar.Job}\t\tVit : {CurrentChar.Vit}\t\tLuk : {CurrentChar.Luk}");
+                    Console.WriteLine("--------------------------------------------------------");
                     switch (ShowMenu("[Stats]", "[Inventory]", "[Delete Character]", "[Change Character]"))
                     {
                         case '1':
@@ -255,11 +255,11 @@ namespace ROTradeProject
             while (!IsAssignout)
             {
                 Console.Clear();
-                Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Stats]\n");
-                Console.WriteLine("---------------------------------------------");
-                Console.WriteLine($"Character : {CurrentChar.Name}\tLvl : {CurrentChar.Level}\tJob : {CurrentChar.Job}");
-                Console.WriteLine($"Statpoint : {CurrentChar.StatPoints}\nStr : {CurrentChar.Str}\nAgi : {CurrentChar.Agi}\nVit : {CurrentChar.Vit}\nInt : {CurrentChar.Int}\nDex : {CurrentChar.Dex}\nLuk : {CurrentChar.Luk}");
-                Console.WriteLine("---------------------------------------------");
+                Console.WriteLine($"\n[{CurrentAccount.Username} > {CurrentChar.Name} > Stats]\n");
+                Console.WriteLine("--------------------------------------------------------");
+                Console.WriteLine($"Name:\t{CurrentChar.Name}\t\tStr : {CurrentChar.Str}\t\tInt : {CurrentChar.Int}\nLvl:\t{CurrentChar.Level}\t\tAgi : {CurrentChar.Agi}\t\tDex : {CurrentChar.Dex}\nJob:\t{CurrentChar.Job}\t\tVit : {CurrentChar.Vit}\t\tLuk : {CurrentChar.Luk}");
+                Console.WriteLine($"\n\t\t\tUnusedStatpoint : {CurrentChar.UnusedStatPoints}");
+                Console.WriteLine("--------------------------------------------------------");
                 switch (ShowMenu($"[Str+1]", "[Agi+1]", "[Vit+1]", "[Int+1]", "[Dex+1]", "[Luk+1]", "[Reset]", "[Back]"))
                 {
                     case '1':
@@ -301,110 +301,10 @@ namespace ROTradeProject
                 switch (ShowMenu("[Storage]", "[Mail Item]", "[Back]"))
                 {
                     case '1':
-                        Console.Clear();
-                        ShowEquipStorage();
-                        ShowEquipBag();
-                        bool IsStorageClose = false;
-                        while (!IsStorageClose)
-                        {
-                            switch (ShowMenu("[Deposit]", "[Withdraw]", "[Back]"))
-                            {
-                                case '1':
-                                    Console.Clear();
-                                    Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage > Deposit]\n");
-                                    Console.Write("Enter item id: ");
-                                    int DepItemId;
-                                    int.TryParse(Console.ReadLine(), out DepItemId);
-                                    if (PRO.ItemDatabase.ContainsKey(DepItemId))
-                                    {
-                                        Item Transferable;
-                                        PRO.ItemDatabase.TryGetValue(DepItemId, out Transferable);
-                                        if (CurrentChar.Inventory.Contains(Transferable))
-                                        {
-                                            CurrentAccount.StorageDeposit(Transferable);
-                                            CurrentChar.InventoryItemOut(Transferable);
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("You don't have that item.");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid item id.");
-                                    }
-                                    continue;
-                                case '2':
-                                    Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage > Deposit]\n");
-                                    Console.Write("Enter item id: ");
-                                    int WthItemId;
-                                    int.TryParse(Console.ReadLine(), out WthItemId);
-                                    if (PRO.ItemDatabase.ContainsKey(WthItemId))
-                                    {
-                                        Item Transferable;
-                                        PRO.ItemDatabase.TryGetValue(WthItemId, out Transferable);
-                                        if (CurrentChar.Inventory.Contains(Transferable))
-                                        {
-                                            CurrentAccount.StorageWithdraw(Transferable);
-                                            CurrentChar.InventoryItemIn(Transferable);
-                                            Console.Clear();
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("You don't have that item.");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid item id.");
-                                    }
-                                    continue;
-                                case '3':
-                                    IsStorageClose = true;
-                                    continue;
-                            }
-                        }
+                        ShowStorage();
                         continue;
-
                     case '2':
-                        Console.Clear();
-                        Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Mail Item]\n");
-                        ShowEquipBag();
-                        Console.Write("\nMail to character(Name): ");
-                        TempCharName = Console.ReadLine();
-                        if (PRO.IsCharacterExist(TempCharName))
-                        {
-                            Character Receiver = PRO.MailReceiver(TempCharName);
-                            Console.Clear();
-                            Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Mail Item]\n");
-                            ShowEquipBag();
-                            Console.Write("Enter item id: ");
-                            int Itemid;
-                            int.TryParse(Console.ReadLine(), out Itemid);
-                            if (PRO.ItemDatabase.ContainsKey(Itemid))
-                            {
-                                Item Transferable;
-                                PRO.ItemDatabase.TryGetValue(Itemid, out Transferable);
-                                if (CurrentChar.Inventory.Contains(Transferable))
-                                {
-                                    CurrentChar.InventoryItemOut(Transferable);
-                                    Receiver.InventoryItemIn(Transferable);
-                                    Console.Clear();
-                                }
-                                else
-                                {
-                                    Console.WriteLine("You don't have that item.");
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invalid item id.");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Character does not exist.");
-                        }
+                        ShowMailItem();
                         continue;
                     case '3':
                         IsBagClose = true;
@@ -420,9 +320,8 @@ namespace ROTradeProject
         {
             foreach (Character character in CurrentAccount.Characters)
             {
-                Console.WriteLine($"Character : {character.Name}\t\tLvl : {character.Level}\tJob : {character.Job}");
-                Console.WriteLine($"Str : {character.Str}\t\tInt : {character.Int}\nAgi : {character.Agi}\t\tDex : {character.Dex}\nVit : {character.Vit}\t\tLuk : {character.Luk}\t\tStatpoint : {character.StatPoints}");
-                Console.WriteLine("---------------------------------------------------");
+                Console.WriteLine($"Name:\t{character.Name}\t\tStr : {character.Str}\t\t\tInt : {character.Int}\nLvl:\t{character.Level}\t\tAgi : {character.Agi}\t\t\tDex : {character.Dex}\nJob:\t{character.Job}\t\tVit : {character.Vit}\t\t\tLuk : {character.Luk}");
+                Console.WriteLine("--------------------------------------------------------");
             }
         }
 
@@ -474,6 +373,128 @@ namespace ROTradeProject
                 return Freebies;
             }
             return null;
+        }
+
+        static void ShowStorage()
+        {
+            bool IsStorageClose = false;
+            while (!IsStorageClose)
+            {
+                Console.Clear();
+                Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage]\n");
+                ShowEquipStorage();
+                ShowEquipBag();
+                switch (ShowMenu("[Deposit]", "[Withdraw]", "[Back]"))
+                {
+                    case '1':
+                        Console.Clear();
+                        Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage > Deposit]\n");
+                        ShowEquipStorage();
+                        ShowEquipBag();
+                        Console.Write("Enter item id: ");
+                        int DepItemId;
+                        int.TryParse(Console.ReadLine(), out DepItemId);
+                        if (PRO.ItemDatabase.ContainsKey(DepItemId))
+                        {
+                            Item Transferable;
+                            PRO.ItemDatabase.TryGetValue(DepItemId, out Transferable);
+                            if (CurrentChar.Inventory.Contains(Transferable))
+                            {
+                                CurrentAccount.StorageDeposit(Transferable);
+                                CurrentChar.InventoryItemOut(Transferable);
+                            }
+                            else
+                            {
+                                Console.WriteLine("You don't have that item.");
+                                Console.ReadKey();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid item id.");
+                            Console.ReadKey();
+                        }
+                        continue;
+                    case '2':
+                        Console.Clear();
+                        Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Storage > Withdraw]\n");
+                        ShowEquipStorage();
+                        ShowEquipBag();
+                        Console.Write("Enter item id: ");
+                        int WthItemId;
+                        int.TryParse(Console.ReadLine(), out WthItemId);
+                        if (PRO.ItemDatabase.ContainsKey(WthItemId))
+                        {
+                            Item Transferable;
+                            PRO.ItemDatabase.TryGetValue(WthItemId, out Transferable);
+                            if (CurrentAccount.Storage.Contains(Transferable))
+                            {
+                                CurrentAccount.StorageWithdraw(Transferable);
+                                CurrentChar.InventoryItemIn(Transferable);
+                                Console.Clear();
+                            }
+                            else
+                            {
+                                Console.WriteLine("You don't have that item.");
+                                Console.ReadKey();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid item id.");
+                            Console.ReadKey();
+                        }
+                        continue;
+                    case '3':
+                        IsStorageClose = true;
+                        continue;
+                }
+            }
+        }
+
+        static void ShowMailItem()
+        {
+            Console.Clear();
+            Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Mail Item]\n");
+            ShowEquipBag();
+            Console.Write("\nMail to character(Name): ");
+            TempCharName = Console.ReadLine();
+            if (PRO.IsCharacterExist(TempCharName))
+            {
+                ReceiverCharacter = PRO.MailReceiver(TempCharName);
+                Console.Clear();
+                Console.WriteLine($"[{CurrentAccount.Username} > {CurrentChar.Name} > Inventory > Mail Item]\n");
+                ShowEquipBag();
+                Console.Write("Enter item id: ");
+                int Itemid;
+                int.TryParse(Console.ReadLine(), out Itemid);
+                if (PRO.ItemDatabase.ContainsKey(Itemid))
+                {
+                    Item Transferable;
+                    PRO.ItemDatabase.TryGetValue(Itemid, out Transferable);
+                    if (CurrentChar.Inventory.Contains(Transferable))
+                    {
+                        CurrentChar.InventoryItemOut(Transferable);
+                        ReceiverCharacter.InventoryItemIn(Transferable);
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("You don't have that item.");
+                        Console.ReadKey();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid item id.");
+                    Console.ReadKey();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Character does not exist.");
+                Console.ReadKey();
+            }
         }
     }
 }

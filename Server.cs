@@ -62,7 +62,7 @@ namespace ROTradeProject
             {
                 foreach (Character character in account.Characters)
                 {
-                    if (character != null && character.Name == Name)
+                    if (character != null && character.Name == CharacterName)
                         return character;
                 }
             }
